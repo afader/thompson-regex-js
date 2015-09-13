@@ -1,0 +1,27 @@
+{
+  "name": "thompson-regex-js",
+  "version": "1.0.0",
+  "description": "Thompson's NFA construction algorithm in javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/afader/thompson-regex-js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/afader/thompson-regex-js/issues"
+  },
+  "homepage": "https://github.com/afader/thompson-regex-js#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-mocha": "^2.1.3",
+    "mocha": "^2.3.2"
+  },
+  "dependencies": {
+    "parsimmon": "git+https://github.com/jneen/parsimmon.git#master"
+  }
+}
