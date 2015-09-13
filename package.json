@@ -19,7 +19,8 @@
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-mocha": "^2.1.3",
-    "mocha": "^2.3.2"
+    "mocha": "^2.3.2",
+    "unit.js": "^2.0.0"
   },
   "dependencies": {
     "parsimmon": "git+https://github.com/jneen/parsimmon.git#master"
