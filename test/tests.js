@@ -17,10 +17,10 @@ describe('regex tests', function() {
     var compiled = nfa.build(parsed.value, environment);
     var match = function(string) { return nfa.simulate(compiled, string); };
     var matches = function(string) {
-      assert(string + ' should match', match(string));
+      assert(match(string), string + ' should match');
     };
     var doesntMatch = function(string) {
-      assert(string + ' should not match', !match(string));
+      assert(!match(string), string + ' should not match');
     }
     matches('abba');
     matches('abbaaa');
