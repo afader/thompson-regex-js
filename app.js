@@ -20836,6 +20836,17 @@
 		  )
 		), 
 		React.createElement(Bootstrap.Row, null, 
+		  React.createElement("p", null, 
+		    "This is a visualization of a regular expression parser and compiler." + " " +
+		    "Enter a regular expression over the" + " " + 
+		    "symbols ", React.createElement("tt", null, "a"), " and ", React.createElement("tt", null, "b"), " and hit enter. To the left you" + " " + 
+		    "will see the parse of the input regular expression. To the right" + " " + 
+		    "you will see the automaton of the regular expression that can be" + " " + 
+		    "used to match strings of ", React.createElement("tt", null, "a"), " and ", React.createElement("tt", null, "b"), " symbols. You" + " " + 
+		    "can scroll and drag the visualizations to see them in more detail."
+		  )
+		), 
+		React.createElement(Bootstrap.Row, null, 
 		  React.createElement(Bootstrap.Col, null, 
 		    React.createElement(RegexInspector, null)
 		  )
@@ -36621,11 +36632,7 @@
 	  },
 	  render: function() {
 	    var input = this.props.expr.input;
-	    var header = (
-	      React.createElement("div", null, 
-		"Expression Tree for ", React.createElement("tt", null, input)
-	      )
-	    );
+	    var header = "Expression Tree";
 	    return (
 	      React.createElement(Bootstrap.Panel, {header: header}, 
 		React.createElement("div", {key: input, ref: "container", className: "fill"})
@@ -36812,11 +36819,7 @@
 	    this.drawGraph();
 	  },
 	  render: function() {
-	    var header = (
-	      React.createElement("div", null, 
-		"NFA for ", React.createElement("tt", null, this.props.nfa.expression.input)
-	      )
-	    );
+	    var header = "NFA";
 	    return (
 	      React.createElement(Bootstrap.Panel, {header: header}, 
 		React.createElement("div", {ref: "container", className: "fill"})
