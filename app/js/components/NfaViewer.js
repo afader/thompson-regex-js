@@ -16,11 +16,7 @@ var NfaViewer = React.createClass({
     this.drawGraph();
   },
   render: function() {
-    var header = (
-      <div>
-	NFA for <tt>{this.props.nfa.expression.input}</tt>
-      </div>
-    );
+    var header = "NFA";
     return (
       <Bootstrap.Panel header={header}>
 	<div ref="container" className="fill"></div>

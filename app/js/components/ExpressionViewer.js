@@ -17,11 +17,7 @@ var ExpressionViewer = React.createClass({
   },
   render: function() {
     var input = this.props.expr.input;
-    var header = (
-      <div>
-	Expression Tree for <tt>{input}</tt>
-      </div>
-    );
+    var header = "Expression Tree";
     return (
       <Bootstrap.Panel header={header}>
 	<div key={input} ref="container" className="fill"></div>
