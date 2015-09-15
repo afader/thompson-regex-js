@@ -2,12 +2,12 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var vis = require('vis');
 var visualization = require('../visualization.js');
-var ExpressionViewer = React.createClass({
+var NfaViewer = React.createClass({
   drawGraph: function() {
     var cont = React.findDOMNode(this.refs.container);
-    var expr = this.props.expr;
-    var data = visualization.expressionGraph(expr);
-    this.net = new vis.Network(cont, data, visualization.config.expression);
+    var nfa = this.props.nfa;
+    var data = visualization.nfaGraph(nfa);
+    new vis.Network(cont, data, visualization.config.nfa);
   },
   componentDidMount: function() {
     this.drawGraph();
@@ -16,17 +16,16 @@ var ExpressionViewer = React.createClass({
     this.drawGraph();
   },
   render: function() {
-    var input = this.props.expr.input;
     var header = (
       <div>
-	Expression Tree for <tt>{input}</tt>
+	NFA for <tt>{this.props.nfa.expression.input}</tt>
       </div>
     );
     return (
       <Bootstrap.Panel header={header}>
-	<div key={input} ref="container" className="fill"></div>
+	<div ref="container" className="fill"></div>
       </Bootstrap.Panel>
     );
   }
 });
-module.exports = ExpressionViewer;
+module.exports = NfaViewer;

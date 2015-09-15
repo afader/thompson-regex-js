@@ -1,10 +1,23 @@
 var React = require('react');
-var ExpressionViewer = require('./ExpressionViewer.js');
-var parsers = require('../../../lib/parsers.js');
+var Bootstrap = require('react-bootstrap');
+var RegexInspector = require('./RegexInspector.js');
+
 var App = React.createClass({
   render: function() {
-   var parsed = parsers.simpleCharRegex('(abc)|d+e?').value;
-   return <ExpressionViewer expr={parsed}/>;
+    return (
+      <Bootstrap.Grid>
+	<Bootstrap.Row>
+	  <Bootstrap.Col>
+	    <h2>Thompson NFA Construction</h2>
+	  </Bootstrap.Col>
+	</Bootstrap.Row>
+	<Bootstrap.Row>
+	  <Bootstrap.Col>
+	    <RegexInspector/>
+	  </Bootstrap.Col>
+	</Bootstrap.Row>
+      </Bootstrap.Grid>
+    );
   }
 });
 module.exports = App;

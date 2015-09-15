@@ -1,5 +1,4 @@
-.expressionContainer {
-  position: absolute;
-  height: 100%; 
+.fill {
+  height: 400px; 
   width: 100%;
 }

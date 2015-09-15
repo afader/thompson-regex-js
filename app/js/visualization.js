@@ -1,4 +1,9 @@
 var config = {};
+var noInteraction = {
+  dragNodes: false,
+  dragView: true,
+  selectable: false
+};
 config.expression = {
   layout: {
     hierarchical: {
@@ -12,15 +17,30 @@ config.expression = {
   },
   nodes: {
     color: {
-      border: 'white',
+      border: 'black',
       background: 'white'
     },
   },
-  interaction: {
-    dragNodes: false,
-    dragView: false,
-    selectable: false
-  }
+  interaction: noInteraction
+};
+config.nfa = {
+  layout: {
+    randomSeed: 2
+  },
+  edges: {
+    arrows: 'to',
+    color: 'grey',
+    font: {
+      align: 'horizontal'
+    }
+  },
+  nodes: {
+    color: {
+      border: 'black',
+      background: 'white'
+    }
+  },
+  interaction: noInteraction
 };
 
 var expressionGraph = function(rootExpr) {
@@ -50,7 +70,29 @@ var expressionGraph = function(rootExpr) {
   };
   return {nodes: nodes, edges: edges};
 };
+
+var nfaGraph = function(nfa) {
+  var nodes = [{id: 'start', color: 'rgba(0,0,0,0)'}];
+  var edges = [{from: 'start', to: '0', label: 'start', color: 'black'}];
+  for (var i = 0; i < nfa.numStates; i++) {
+    var thisId = String(i);
+    var node = { id: thisId, label: thisId };
+    if (i == nfa.finalState) {
+      node.borderWidth = 5;
+    }
+    nodes.push(node);
+    var trans = nfa.transitions[i];
+    Object.keys(trans).forEach(function(target) {
+      var nextId = String(target);
+      var label = trans[target].name;
+      edges.push({from: thisId, to: nextId, label: label});
+    });
+  }
+  return {nodes: nodes, edges: edges};
+};
+
 module.exports = {
   expressionGraph: expressionGraph,
-  config: config
+  config: config,
+  nfaGraph: nfaGraph
 };
