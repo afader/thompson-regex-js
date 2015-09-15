@@ -437,7 +437,7 @@
 
 
 	// module
-	exports.push([module.id, ".fill {\n  height: 400px; \n  width: 100%;\n}\n", ""]);
+	exports.push([module.id, ".fill {\n  height: 400px; \n  width: 100%;\n}\n\nbody {\n  margin: 15px;\n}\n", ""]);
 
 	// exports
 
