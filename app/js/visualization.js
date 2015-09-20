@@ -84,7 +84,7 @@ var nfaGraph = function(nfa) {
     var trans = nfa.transitions[i];
     Object.keys(trans).forEach(function(target) {
       var nextId = String(target);
-      var label = trans[target].name;
+      var label = trans[target];
       edges.push({from: thisId, to: nextId, label: label});
     });
   }

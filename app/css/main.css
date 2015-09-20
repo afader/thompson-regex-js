@@ -1,8 +1,48 @@
-.fill {
-  height: 400px; 
+.code {
+  font-family: monospace;
+  background-color: #f1ede4;
+  border-radius: 5px;
+  padding: 2px;
+}
+
+em {
+  background-color: #FF9;
+  font-style: normal;
+  padding: 2px;
+}
+
+.figure > .panel > .panel-body {
   width: 100%;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+}
+
+.figure > .panel > .panel-body > div {
+  width: 100%;
+  flex-shrink: 1;
+}
+
+.figure > .panel > .panel-body > div:last-child {
+  width: 100%;
+  flex-grow: 1;
+  flex-direction: column;
+}
+
+.caption {
+  text-align: center;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-style: italic;
 }
 
 body {
-  margin: 15px;
+}
+
+p {
+  line-height: 1.75;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
