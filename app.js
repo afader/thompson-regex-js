@@ -437,7 +437,7 @@
 
 
 	// module
-	exports.push([module.id, ".fill {\n  height: 400px; \n  width: 100%;\n}\n\nbody {\n  margin: 15px;\n}\n", ""]);
+	exports.push([module.id, ".code {\n  font-family: monospace;\n  background-color: #f1ede4;\n  border-radius: 5px;\n  padding: 2px;\n}\n\nem {\n  background-color: #FF9;\n  font-style: normal;\n  padding: 2px;\n}\n\n.program {\n  overflow: auto;\n}\n\n.figure > .panel > .panel-body {\n  width: 100%;\n  margin-bottom: 5px;\n  display: flex;\n  flex-direction: column;\n  height: 400px;\n}\n\n.figure > .panel > .panel-body > div {\n  width: 100%;\n  flex-shrink: 1;\n}\n\n.figure > .panel > .panel-body > div:last-child {\n  width: 100%;\n  flex-grow: 1;\n  flex-direction: column;\n}\n\n.caption {\n  text-align: center;\n  width: 100%;\n  padding-left: 10px;\n  padding-right: 10px;\n  font-style: italic;\n}\n\nbody {\n}\n\np {\n  line-height: 1.75;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n", ""]);
 
 	// exports
 
@@ -20824,32 +20824,32 @@
 
 	var React = __webpack_require__(12);
 	var Bootstrap = __webpack_require__(169);
-	var RegexInspector = __webpack_require__(399);
+	var InteractiveExpression = __webpack_require__(399);
+	var InteractiveNfa = __webpack_require__(420);
+	var InteractiveProgram = __webpack_require__(422);
 
 	var App = React.createClass({displayName: "App",
 	  render: function() {
 	    return (
 	      React.createElement(Bootstrap.Grid, null, 
-		React.createElement(Bootstrap.Row, null, 
-		  React.createElement(Bootstrap.Col, null, 
-		    React.createElement("h2", null, "Thompson NFA Construction")
-		  )
-		), 
-		React.createElement(Bootstrap.Row, null, 
-		  React.createElement("p", null, 
-		    "This is a visualization of a regular expression parser and compiler." + " " +
-		    "Enter a regular expression over the" + " " + 
-		    "symbols ", React.createElement("tt", null, "a"), " and ", React.createElement("tt", null, "b"), " and hit enter. To the left you" + " " + 
-		    "will see the parse of the input regular expression. To the right" + " " + 
-		    "you will see the automaton of the regular expression that can be" + " " + 
-		    "used to match strings of ", React.createElement("tt", null, "a"), " and ", React.createElement("tt", null, "b"), " symbols. You" + " " + 
-		    "can scroll and drag the visualizations to see them in more detail."
-		  )
-		), 
-		React.createElement(Bootstrap.Row, null, 
-		  React.createElement(Bootstrap.Col, null, 
-		    React.createElement(RegexInspector, null)
-		  )
+		React.createElement(Bootstrap.Col, {lg: 6, md: 6, sm: 12, xs: 12}, 
+		  React.createElement("h1", null, "Visualizing Regular Expressions"), 
+		  React.createElement("p", null, "The first visualization is the parse tree view of regular" + " " + 
+		  "expressions. This this visualizes the syntax of a regular expression" + " " +
+		  "as a tree."), 
+		  React.createElement(InteractiveExpression, {regex: "a+b+"}), 
+		  React.createElement("p", null, "The second visualization is the NFA view of regular expressions." + " " +
+		  "This visualizes the semantics of a regular expression as a graph." + " " +
+		  "A string that matches the regular expression can be mapped to a path" + " " +
+		  "through the graph starting at the start node and ending at the" + " " + 
+		  "final bolded node."), 
+		  React.createElement(InteractiveNfa, {regex: "a+b+"}), 
+		  React.createElement("p", null, "The third visualization is the machine code view of regular" + " " + 
+		  "expressions. This visualizes the semantics of a regular expression as" + " " +
+		  "a sequence of instructions. A string that matches the regular" + " " + 
+		  "expression can be mapped to an execution path through the machine" + " " + 
+		  "code, terminating at the match instruction."), 
+		  React.createElement(InteractiveProgram, {regex: "a+b+"})
 		)
 	      )
 	    );
@@ -36561,52 +36561,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(12);
-	var Bootstrap = __webpack_require__(169);
 	var ExpressionViewer = __webpack_require__(400);
-	var NfaViewer = __webpack_require__(403);
-	var RegexInput = __webpack_require__(404);
-	var nfa = __webpack_require__(405);
-	var predicates = __webpack_require__(410);
-	var parsers = __webpack_require__(411);
-
-	var env = {
-	  'a': predicates.equals('a'),
-	  'b': predicates.equals('b'),
-	  '.': predicates.alwaysTrue
-	};
-
-	var RegexInspector = React.createClass({displayName: "RegexInspector",
-	  getInitialState: function() {
-	    return {
-	      input: 'a(bb)+a'
-	    };
-	  },
-	  handleSubmit: function(value) {
-	    this.setState({input: value});
-	  },
-	  render: function() {
-	    var parsed = parsers.simpleCharRegex(this.state.input);
-	    var compiled = nfa.build(parsed.value, env);
-	    return (
-	      React.createElement(Bootstrap.Grid, null, 
-		React.createElement(Bootstrap.Row, null, 
-		  React.createElement(Bootstrap.Col, {md: 12, lg: 12, sm: 12, xs: 12}, 
-		    React.createElement(RegexInput, {value: this.state.input, onSubmit: this.handleSubmit})
-		  )
-		), 
-		React.createElement(Bootstrap.Row, null, 
-		  React.createElement(Bootstrap.Col, {md: 6, lg: 6, sm: 6, xs: 6}, 
-		    React.createElement(ExpressionViewer, {expr: parsed.value})
-		  ), 
-		  React.createElement(Bootstrap.Col, {md: 6, lg: 6, sm: 6, xs: 6}, 
-		    React.createElement(NfaViewer, {nfa: compiled})
-		  )
-		)
-	      )
-	    );
-	  }
-	});
-	module.exports = RegexInspector;
+	var InteractiveFigure = __webpack_require__(418);
+	module.exports = InteractiveFigure(ExpressionViewer, 'regex');
 
 
 /***/ },
@@ -36617,27 +36574,30 @@
 	var Bootstrap = __webpack_require__(169);
 	var vis = __webpack_require__(401);
 	var visualization = __webpack_require__(402);
+	var CharRegex = __webpack_require__(403);
 	var ExpressionViewer = React.createClass({displayName: "ExpressionViewer",
 	  drawGraph: function() {
 	    var cont = React.findDOMNode(this.refs.container);
-	    var expr = this.props.expr;
-	    var data = visualization.expressionGraph(expr);
-	    this.net = new vis.Network(cont, data, visualization.config.expression);
+	    var data = visualization.expressionGraph(this.regex.expression);
+	    var net = new vis.Network(cont, data, visualization.config.expression);
+	    var parentHeight = React.findDOMNode(this).offsetHeight;
+	    net.setOptions({height: String(parentHeight)});
 	  },
 	  componentDidMount: function() {
-	    this.drawGraph();
+	    if (this.didCompile) this.drawGraph();
 	  },
 	  componentDidUpdate: function() {
-	    this.drawGraph();
+	    if (this.didCompile) this.drawGraph();
 	  },
 	  render: function() {
-	    var input = this.props.expr.input;
-	    var header = "Expression Tree";
-	    return (
-	      React.createElement(Bootstrap.Panel, {header: header}, 
-		React.createElement("div", {key: input, ref: "container", className: "fill"})
-	      )
-	    );
+	    try {
+	      this.regex = new CharRegex(this.props.regex);
+	      this.didCompile = true;
+	      return React.createElement("div", {ref: "container"});
+	    } catch(err) {
+	      this.didCompile = false;
+	      return React.createElement(Bootstrap.Alert, {bsStyle: "danger"}, err);
+	    }
 	  }
 	});
 	module.exports = ExpressionViewer;
@@ -36783,7 +36743,7 @@
 	    var trans = nfa.transitions[i];
 	    Object.keys(trans).forEach(function(target) {
 	      var nextId = String(target);
-	      var label = trans[target].name;
+	      var label = trans[target];
 	      edges.push({from: thisId, to: nextId, label: label});
 	    });
 	  }
@@ -36801,76 +36761,896 @@
 /* 403 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(12);
-	var Bootstrap = __webpack_require__(169);
-	var vis = __webpack_require__(401);
-	var visualization = __webpack_require__(402);
-	var NfaViewer = React.createClass({displayName: "NfaViewer",
-	  drawGraph: function() {
-	    var cont = React.findDOMNode(this.refs.container);
-	    var nfa = this.props.nfa;
-	    var data = visualization.nfaGraph(nfa);
-	    new vis.Network(cont, data, visualization.config.nfa);
-	  },
-	  componentDidMount: function() {
-	    this.drawGraph();
-	  },
-	  componentDidUpdate: function() {
-	    this.drawGraph();
-	  },
-	  render: function() {
-	    var header = "NFA";
-	    return (
-	      React.createElement(Bootstrap.Panel, {header: header}, 
-		React.createElement("div", {ref: "container", className: "fill"})
-	      )
-	    );
+	var parser = __webpack_require__(404);
+	var env = __webpack_require__(410);
+	var vm = __webpack_require__(412);
+	var nfa = __webpack_require__(413);
+	var Parsimmon = __webpack_require__(407);
+
+	var CharRegex = function(pattern) {
+	  this.pattern = pattern;
+	  this.parseResults = parser.parse(pattern);
+	  if (!this.parseResults.status) {
+	    var error = Parsimmon.formatError(pattern, this.parseResults)
+	    throw "Could not parse: " + error;
 	  }
-	});
-	module.exports = NfaViewer;
+	  this.expression = this.parseResults.value;
+	  this.program = vm.compile(this.expression);
+	  this.nfa = nfa.compile(this.expression);
+	  this.match = function(input) {
+	    return vm.run(this.program, input, env);
+	  }
+	};
+
+	module.exports = CharRegex;
 
 
 /***/ },
 /* 404 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(12);
-	var Bootstrap = __webpack_require__(169);
-	var RegexInput = React.createClass({displayName: "RegexInput",
-	  getInitialState: function() {
-	    return {value: this.props.value};
-	  },
-	  handleSubmit: function(e) {
-	    e.preventDefault();
-	    this.props.onSubmit(this.state.value);
-	  },
-	  handleChange: function(e) {
-	    this.setState({value: e.target.value});
-	  },
-	  render: function() {
-	    var button = React.createElement(Bootstrap.Button, null, "Inspect");
-	    return (
-	      React.createElement("form", {onSubmit: this.handleSubmit}, 
-		React.createElement(Bootstrap.Input, {
-		  type: "text", 
-		  onChange: this.handleChange, 
-		  placeholder: "Enter a regular expression over symbols {a,b}", 
-		  value: this.state.value, 
-		  buttonAfter: button})
-	      )
-	    );
-	    return React.createElement("h3", null, "Input");
-	  }
+	var syntax = __webpack_require__(405);
+	var parsers = __webpack_require__(406);
+	var seq = parsers.seq;
+	var string = parsers.string;
+	var alt = parsers.alt;
+	var lazy = parsers.lazy;
+	var regexParser = parsers.regex;
+	var sepBy = parsers.sepBy;
+	var pipe = parsers.pipe;
+	var dot = parsers.dot;
+	var parenthesized = parsers.parenthesized;
+	var lsqr = parsers.lsqr;
+	var rsqr = parsers.rsqr;
+	var caret = parsers.caret;
+	var lparen = parsers.lparen;
+	var rparen = parsers.rparen;
+	var star = parsers.star;
+	var plus = parsers.plus;
+	var qmark = parsers.qmark;
+	var starred = parsers.starred(syntax.zeroOrMore);
+	var plussed = parsers.plussed(syntax.oneOrMore);
+	var qmarked = parsers.qmarked(syntax.zeroOrOne);
+	var root = lazy('root expression', function() {
+	  return regex.map(syntax.root);
 	});
-	module.exports = RegexInput;
+	var regex = lazy('regex', function() {
+	  return sepBy(branch, pipe).map(syntax.alternation);
+	});
+	var wildcard = dot.map(function() {
+	  return syntax.predicate('wildcard');
+	}).desc('wildcard');
+	var escaped = function(str, name) {
+	  if (!name) name = str;
+	  return string('\\' + str).result(syntax.predicate(name)).desc(name);
+	};
+	var character = regexParser(/[^\\*+?()\[\].|-]/).map(syntax.predicate).desc('character');
+	var space = string(' ').result(syntax.predicate('space')).desc('space');
+	var dash = string('-').result(syntax.predicate('-')).desc('-');
+	var escapedBackslash = escaped('\\');
+	var whitespace = escaped('s', 'whitespace');
+	var newline = escaped('n', 'newline');
+	var word = escaped('w', 'wordChar');
+	var escapedLparen = escaped('(');
+	var escapedRparen = escaped(')');
+	var escapedLsqr = escaped('[');
+	var escapedRsqr = escaped(']');
+	var escapedStar = escaped('*');
+	var escapedPlus = escaped('+');
+	var escapedQmark = escaped('?');
+	var escapedPipe = escaped('|');
+	var escapedDot = escaped('.');
+	var escapedSymbol = alt(escapedBackslash, escapedLparen, escapedRparen, escapedPlus, escapedQmark,
+				escapedRsqr, escapedLsqr, word, newline, whitespace, escapedDot, escapedPipe);
+	var literal = alt(escapedBackslash, whitespace, newline, word, space, character, lparen, rparen, star, plus, qmark, pipe, dot);
+	var literals = sepBy(literal, string('')).map(syntax.alternation);
+	//var rangeValue = alt(escapedSymbol, nonDashCharacter);
+	//var ranges = alt(positiveRange, negativeRange);
+	var charClass = lsqr.then(literals).skip(rsqr).desc('character class');
+	var atom = alt(parenthesized(regex), charClass, wildcard, escapedSymbol, space, dash, character).desc('atom');
+	var piece = alt(starred(atom), plussed(atom), qmarked(atom), atom).desc('piece');
+	var branch = piece.atLeast(1).map(syntax.concatenation).desc('branch');
+	module.exports = root;
 
 
 /***/ },
 /* 405 */
+/***/ function(module, exports) {
+
+	var expression = function(type, children, data) {
+	  return {
+	    type: type,
+	    children: children ? children : [],
+	    data: data ? data : {}
+	  };
+	};
+
+	var withOneChild = function(name) {
+	  return function(expr, data) {
+	    return expression(name, [expr], data);
+	  };
+	};
+
+	var withMultipleChildren = function(name) {
+	  return function(exprs, data) {
+	    if (exprs.length == 0) {
+	      throw name + ' takes at least one child node';
+	    } else if (exprs.length == 1) {
+	      return exprs[0];
+	    } else {
+	      return expression(name, exprs, data);
+	    }
+	  };
+	};
+
+	var disjunction = function(exprs, negated) {
+	  var notPred = function(x) { return !('type' in x) || x.type != 'predicate' };
+	  if (exprs.some(notPred)) {
+	    var first = notPred.find(notPred);
+	    throw 'disjunction must take predicates as arguments, got: ' + first.type;
+	  } else if (exprs.length < 1) {
+	    throw 'disjunction must take at least one predicate';
+	  }
+	  var children = exprs;
+	  var data = {negated: negated};
+	  return expression('disjunction', children, data);
+	};
+
+	var expressions = {
+	  predicate: function(name) {
+	    var data = {name: name};
+	    var children = [];
+	    return expression('predicate', children, data);
+	  },
+	  concatenation: withMultipleChildren('concatenation'),
+	  alternation: withMultipleChildren('alternation'),
+	  zeroOrMore: withOneChild('zeroOrMore'),
+	  oneOrMore: withOneChild('oneOrMore'),
+	  zeroOrOne: withOneChild('zeroOrOne'),
+	  root: withOneChild('root'),
+	  disjunction: disjunction
+	}
+
+	module.exports = expressions;
+
+
+/***/ },
+/* 406 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var util = __webpack_require__(406);
-	var fragment = __webpack_require__(409);
+	var parsers = __webpack_require__(407);
+	var syntax = __webpack_require__(405);
+	parsers.sepBy = function(parser, separator) {
+	  var pairs = separator.then(parser).many();
+	  return parser.chain(function(r) {
+	    return pairs.map(function(rs) {
+	       return [r].concat(rs);
+	     })
+	  })
+	};
+	var pipe = parsers.pipe = parsers.string('|');
+	var lparen = parsers.lparen = parsers.string('(');
+	var rparen = parsers.rparen = parsers.string(')');
+	var star = parsers.star = parsers.string('*');
+	var plus = parsers.plus = parsers.string('+');
+	var qmark = parsers.qmark = parsers.string('?');
+	var dot = parsers.dot = parsers.string('.');
+	var lsqr = parsers.lsqr = parsers.string('[');
+	var rsqr = parsers.rsqr = parsers.string(']');
+	var caret = parsers.caret = parsers.string('^');
+	var parenthesized = parsers.parenthesized = function(parser) {
+	  return lparen.then(parser).skip(rparen);
+	};
+	var suffixOperator = parsers.suffixOperator = function(operator) {
+	  return function(fn) {
+	    return function(parser) {
+	      return parser.skip(operator).map(fn);
+	    }
+	  }
+	};
+	parsers.plussed = suffixOperator(plus);
+	parsers.starred = suffixOperator(star);
+	parsers.qmarked = suffixOperator(qmark);
+	module.exports = parsers;
+
+
+/***/ },
+/* 407 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(408);
+	exports.version = __webpack_require__(409).version;
+
+
+/***/ },
+/* 408 */
+/***/ function(module, exports) {
+
+	// pass
+	var Parsimmon = {};
+
+	Parsimmon.Parser = (function() {
+	  "use strict";
+
+	  // The Parser object is a wrapper for a parser function.
+	  // Externally, you use one to parse a string by calling
+	  //   var result = SomeParser.parse('Me Me Me! Parse Me!');
+	  // You should never call the constructor, rather you should
+	  // construct your Parser from the base parsers and the
+	  // parser combinator methods.
+	  function Parser(action) {
+	    if (!(this instanceof Parser)) return new Parser(action);
+	    this._ = action;
+	  };
+
+	  var _ = Parser.prototype;
+
+	  function makeSuccess(index, value) {
+	    return {
+	      status: true,
+	      index: index,
+	      value: value,
+	      furthest: -1,
+	      expected: []
+	    };
+	  }
+
+	  function makeFailure(index, expected) {
+	    return {
+	      status: false,
+	      index: -1,
+	      value: null,
+	      furthest: index,
+	      expected: [expected]
+	    };
+	  }
+
+	  function mergeReplies(result, last) {
+	    if (!last) return result;
+	    if (result.furthest > last.furthest) return result;
+
+	    var expected = (result.furthest === last.furthest)
+	      ? result.expected.concat(last.expected)
+	      : last.expected;
+
+	    return {
+	      status: result.status,
+	      index: result.index,
+	      value: result.value,
+	      furthest: last.furthest,
+	      expected: expected
+	    }
+	  }
+
+	  function assertParser(p) {
+	    if (!(p instanceof Parser)) throw new Error('not a parser: '+p);
+	  }
+
+	  function formatExpected(expected) {
+	    if (expected.length === 1) return expected[0];
+
+	    return 'one of ' + expected.join(', ')
+	  }
+
+	  function formatGot(stream, error) {
+	    var i = error.index;
+
+	    if (i === stream.length) return ', got the end of the stream'
+
+
+	    var prefix = (i > 0 ? "'..." : "'");
+	    var suffix = (stream.length - i > 12 ? "...'" : "'");
+
+	    return ' at character ' + i + ', got ' + prefix + stream.slice(i, i+12) + suffix
+	  }
+
+	  var formatError = Parsimmon.formatError = function(stream, error) {
+	    return 'expected ' + formatExpected(error.expected) + formatGot(stream, error)
+	  };
+
+	  _.parse = function(stream) {
+	    var result = this.skip(eof)._(stream, 0);
+
+	    return result.status ? {
+	      status: true,
+	      value: result.value
+	    } : {
+	      status: false,
+	      index: result.furthest,
+	      expected: result.expected
+	    };
+	  };
+
+	  // [Parser a] -> Parser [a]
+	  var seq = Parsimmon.seq = function() {
+	    var parsers = [].slice.call(arguments);
+	    var numParsers = parsers.length;
+
+	    return Parser(function(stream, i) {
+	      var result;
+	      var accum = new Array(numParsers);
+
+	      for (var j = 0; j < numParsers; j += 1) {
+	        result = mergeReplies(parsers[j]._(stream, i), result);
+	        if (!result.status) return result;
+	        accum[j] = result.value
+	        i = result.index;
+	      }
+
+	      return mergeReplies(makeSuccess(i, accum), result);
+	    });
+	  };
+
+
+	  var seqMap = Parsimmon.seqMap = function() {
+	    var args = [].slice.call(arguments);
+	    var mapper = args.pop();
+	    return seq.apply(null, args).map(function(results) {
+	      return mapper.apply(null, results);
+	    });
+	  };
+
+	  /**
+	   * Allows to add custom primitive parsers
+	   */
+	  var custom = Parsimmon.custom = function(parsingFunction) {
+	    return Parser(parsingFunction(makeSuccess, makeFailure));
+	  };
+
+	  var alt = Parsimmon.alt = function() {
+	    var parsers = [].slice.call(arguments);
+	    var numParsers = parsers.length;
+	    if (numParsers === 0) return fail('zero alternates')
+
+	    return Parser(function(stream, i) {
+	      var result;
+	      for (var j = 0; j < parsers.length; j += 1) {
+	        result = mergeReplies(parsers[j]._(stream, i), result);
+	        if (result.status) return result;
+	      }
+	      return result;
+	    });
+	  };
+
+	  // -*- primitive combinators -*- //
+	  _.or = function(alternative) {
+	    return alt(this, alternative);
+	  };
+
+	  _.then = function(next) {
+	    if (typeof next === 'function') {
+	      throw new Error('chaining features of .then are no longer supported, use .chain instead');
+	    }
+
+	    assertParser(next);
+	    return seq(this, next).map(function(results) { return results[1]; });
+	  };
+
+	  // -*- optimized iterative combinators -*- //
+	  // equivalent to:
+	  // _.many = function() {
+	  //   return this.times(0, Infinity);
+	  // };
+	  // or, more explicitly:
+	  // _.many = function() {
+	  //   var self = this;
+	  //   return self.then(function(x) {
+	  //     return self.many().then(function(xs) {
+	  //       return [x].concat(xs);
+	  //     });
+	  //   }).or(succeed([]));
+	  // };
+	  _.many = function() {
+	    var self = this;
+
+	    return Parser(function(stream, i) {
+	      var accum = [];
+	      var result;
+	      var prevResult;
+
+	      for (;;) {
+	        result = mergeReplies(self._(stream, i), result);
+
+	        if (result.status) {
+	          i = result.index;
+	          accum.push(result.value);
+	        }
+	        else {
+	          return mergeReplies(makeSuccess(i, accum), result);
+	        }
+	      }
+	    });
+	  };
+
+	  // equivalent to:
+	  // _.times = function(min, max) {
+	  //   if (arguments.length < 2) max = min;
+	  //   var self = this;
+	  //   if (min > 0) {
+	  //     return self.then(function(x) {
+	  //       return self.times(min - 1, max - 1).then(function(xs) {
+	  //         return [x].concat(xs);
+	  //       });
+	  //     });
+	  //   }
+	  //   else if (max > 0) {
+	  //     return self.then(function(x) {
+	  //       return self.times(0, max - 1).then(function(xs) {
+	  //         return [x].concat(xs);
+	  //       });
+	  //     }).or(succeed([]));
+	  //   }
+	  //   else return succeed([]);
+	  // };
+	  _.times = function(min, max) {
+	    if (arguments.length < 2) max = min;
+	    var self = this;
+
+	    return Parser(function(stream, i) {
+	      var accum = [];
+	      var start = i;
+	      var result;
+	      var prevResult;
+
+	      for (var times = 0; times < min; times += 1) {
+	        result = self._(stream, i);
+	        prevResult = mergeReplies(result, prevResult);
+	        if (result.status) {
+	          i = result.index;
+	          accum.push(result.value);
+	        }
+	        else return prevResult;
+	      }
+
+	      for (; times < max; times += 1) {
+	        result = self._(stream, i);
+	        prevResult = mergeReplies(result, prevResult);
+	        if (result.status) {
+	          i = result.index;
+	          accum.push(result.value);
+	        }
+	        else break;
+	      }
+
+	      return mergeReplies(makeSuccess(i, accum), prevResult);
+	    });
+	  };
+
+	  // -*- higher-level combinators -*- //
+	  _.result = function(res) { return this.map(function(_) { return res; }); };
+	  _.atMost = function(n) { return this.times(0, n); };
+	  _.atLeast = function(n) {
+	    var self = this;
+	    return seqMap(this.times(n), this.many(), function(init, rest) {
+	      return init.concat(rest);
+	    });
+	  };
+
+	  _.map = function(fn) {
+	    var self = this;
+	    return Parser(function(stream, i) {
+	      var result = self._(stream, i);
+	      if (!result.status) return result;
+	      return mergeReplies(makeSuccess(result.index, fn(result.value)), result);
+	    });
+	  };
+
+	  _.skip = function(next) {
+	    return seq(this, next).map(function(results) { return results[0]; });
+	  };
+
+	  _.mark = function() {
+	    return seqMap(index, this, index, function(start, value, end) {
+	      return { start: start, value: value, end: end };
+	    });
+	  };
+
+	  _.desc = function(expected) {
+	    var self = this;
+	    return Parser(function(stream, i) {
+	      var reply = self._(stream, i);
+	      if (!reply.status) reply.expected = [expected];
+	      return reply;
+	    });
+	  };
+
+	  // -*- primitive parsers -*- //
+	  var string = Parsimmon.string = function(str) {
+	    var len = str.length;
+	    var expected = "'"+str+"'";
+
+	    return Parser(function(stream, i) {
+	      var head = stream.slice(i, i+len);
+
+	      if (head === str) {
+	        return makeSuccess(i+len, head);
+	      }
+	      else {
+	        return makeFailure(i, expected);
+	      }
+	    });
+	  };
+
+	  var regex = Parsimmon.regex = function(re, group) {
+	    var anchored = RegExp('^(?:'+re.source+')', (''+re).slice((''+re).lastIndexOf('/')+1));
+	    var expected = '' + re;
+	    if (group == null) group = 0;
+
+	    return Parser(function(stream, i) {
+	      var match = anchored.exec(stream.slice(i));
+
+	      if (match) {
+	        var fullMatch = match[0];
+	        var groupMatch = match[group];
+	        if (groupMatch != null) return makeSuccess(i+fullMatch.length, groupMatch);
+	      }
+
+	      return makeFailure(i, expected);
+	    });
+	  };
+
+	  var succeed = Parsimmon.succeed = function(value) {
+	    return Parser(function(stream, i) {
+	      return makeSuccess(i, value);
+	    });
+	  };
+
+	  var fail = Parsimmon.fail = function(expected) {
+	    return Parser(function(stream, i) { return makeFailure(i, expected); });
+	  };
+
+	  var letter = Parsimmon.letter = regex(/[a-z]/i).desc('a letter')
+	  var letters = Parsimmon.letters = regex(/[a-z]*/i)
+	  var digit = Parsimmon.digit = regex(/[0-9]/).desc('a digit');
+	  var digits = Parsimmon.digits = regex(/[0-9]*/)
+	  var whitespace = Parsimmon.whitespace = regex(/\s+/).desc('whitespace');
+	  var optWhitespace = Parsimmon.optWhitespace = regex(/\s*/);
+
+	  var any = Parsimmon.any = Parser(function(stream, i) {
+	    if (i >= stream.length) return makeFailure(i, 'any character');
+
+	    return makeSuccess(i+1, stream.charAt(i));
+	  });
+
+	  var all = Parsimmon.all = Parser(function(stream, i) {
+	    return makeSuccess(stream.length, stream.slice(i));
+	  });
+
+	  var eof = Parsimmon.eof = Parser(function(stream, i) {
+	    if (i < stream.length) return makeFailure(i, 'EOF');
+
+	    return makeSuccess(i, null);
+	  });
+
+	  var test = Parsimmon.test = function(predicate) {
+	    return Parser(function(stream, i) {
+	      var char = stream.charAt(i);
+	      if (i < stream.length && predicate(char)) {
+	        return makeSuccess(i+1, char);
+	      }
+	      else {
+	        return makeFailure(i, 'a character matching '+predicate);
+	      }
+	    });
+	  };
+
+	  var oneOf = Parsimmon.oneOf = function(str) {
+	    return test(function(ch) { return str.indexOf(ch) >= 0; });
+	  };
+
+	  var noneOf = Parsimmon.noneOf = function(str) {
+	    return test(function(ch) { return str.indexOf(ch) < 0; });
+	  };
+
+	  var takeWhile = Parsimmon.takeWhile = function(predicate) {
+	    return Parser(function(stream, i) {
+	      var j = i;
+	      while (j < stream.length && predicate(stream.charAt(j))) j += 1;
+	      return makeSuccess(j, stream.slice(i, j));
+	    });
+	  };
+
+	  var lazy = Parsimmon.lazy = function(desc, f) {
+	    if (arguments.length < 2) {
+	      f = desc;
+	      desc = undefined;
+	    }
+
+	    var parser = Parser(function(stream, i) {
+	      parser._ = f()._;
+	      return parser._(stream, i);
+	    });
+
+	    if (desc) parser = parser.desc(desc)
+
+	    return parser;
+	  };
+
+	  var index = Parsimmon.index = Parser(function(stream, i) {
+	    return makeSuccess(i, i);
+	  });
+
+	  //- fantasyland compat
+
+	  //- Monoid (Alternative, really)
+	  _.concat = _.or;
+	  _.empty = fail('empty')
+
+	  //- Applicative
+	  _.of = Parser.of = Parsimmon.of = succeed
+
+	  _.ap = function(other) {
+	    return seqMap(this, other, function(f, x) { return f(x); })
+	  };
+
+	  //- Monad
+	  _.chain = function(f) {
+	    var self = this;
+	    return Parser(function(stream, i) {
+	      var result = self._(stream, i);
+	      if (!result.status) return result;
+	      var nextParser = f(result.value);
+	      return mergeReplies(nextParser._(stream, result.index), result);
+	    });
+	  };
+
+	  return Parser;
+	})();
+	module.exports = Parsimmon;
+
+
+/***/ },
+/* 409 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"name": "parsimmon",
+		"version": "0.7.0",
+		"description": "A monadic LL(infinity) parser combinator library",
+		"keywords": [
+			"parsing",
+			"parse",
+			"parser combinators"
+		],
+		"author": {
+			"name": "Jeanine Adkisson",
+			"email": "jneen at jneen dot net"
+		},
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/jneen/parsimmon.git"
+		},
+		"files": [
+			"index.js",
+			"src",
+			"test",
+			"Makefile",
+			"package.json",
+			"build/parsimmon.commonjs.js",
+			"build/parsimmon.browser.js",
+			"build/parsimmon.browser.min.js"
+		],
+		"main": "index.js",
+		"devDependencies": {
+			"mocha": "1.8.x",
+			"chai": "1.5.x",
+			"uglify-js": "2.x"
+		},
+		"dependencies": {
+			"pjs": "5.x"
+		},
+		"scripts": {
+			"test": "make test"
+		},
+		"bugs": {
+			"url": "https://github.com/jneen/parsimmon/issues"
+		},
+		"homepage": "https://github.com/jneen/parsimmon",
+		"_id": "parsimmon@0.7.0",
+		"_shasum": "652fc7cbade73c5edb42a266ec556c906d82c9fb",
+		"_resolved": "https://registry.npmjs.org/parsimmon/-/parsimmon-0.7.0.tgz",
+		"_from": "parsimmon@*",
+		"_npmVersion": "1.4.14",
+		"_npmUser": {
+			"name": "jayferd",
+			"email": "jjmadkisson@gmail.com"
+		},
+		"maintainers": [
+			{
+				"name": "jayferd",
+				"email": "jjmadkisson@gmail.com"
+			},
+			{
+				"name": "jneen",
+				"email": "jneen@jneen.net"
+			}
+		],
+		"dist": {
+			"shasum": "652fc7cbade73c5edb42a266ec556c906d82c9fb",
+			"tarball": "http://registry.npmjs.org/parsimmon/-/parsimmon-0.7.0.tgz"
+		},
+		"directories": {},
+		"readme": "ERROR: No README data found!"
+	}
+
+/***/ },
+/* 410 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var predicates = __webpack_require__(411);
+	var env = function(symbol) {
+	  if (symbol == 'wildcard') {
+	    return predicates.alwaysTrue;
+	  } else if (symbol == 'space') {
+	    return predicates.equals(' ');
+	  } else {
+	    return predicates.equals(symbol);
+	  }
+	};
+	module.exports = env;
+
+
+/***/ },
+/* 411 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  alwaysTrue: function() {
+	    return true;
+	  },
+	  equals: function(x) {
+	    return function(y) {
+	      return x == y;
+	    }
+	  }
+	};
+
+
+/***/ },
+/* 412 */
+/***/ function(module, exports) {
+
+	var instruction = {};
+	instruction.predicate = function(name) {
+	  return { type: 'predicate', name: name };
+	};
+	instruction.match = function() {
+	  return { type: 'match' };
+	};
+	instruction.jump = function(increment) {
+	  return { type: 'jump', increment: increment };
+	};
+	instruction.split = function(increment) {
+	  return { type: 'split', increment: increment };
+	};
+
+	var concat = function(array1, array2) { return array1.concat(array2); };
+	var codes = {};
+	var compile = function(expr) {
+	  if (expr.type in codes) {
+	    return codes[expr.type](expr);
+	  } else {
+	    throw 'Unexpected expression type: "' + expr.type + '"';
+	  }
+	};
+
+	codes.predicate = function(expr) {
+	  var predName = expr.data.name;
+	  var pred = instruction.predicate(predName);
+	  return [pred];
+	};
+
+	codes.concatenation = function(expr) {
+	  var childCodes = expr.children.map(compile);
+	  return childCodes.reduce(concat);
+	};
+
+	codes.alternation = function(expr) {
+	  var childCodes = expr.children.map(compile);
+	  var reducer = function(codes1, codes2) {
+	    var split = [instruction.split(codes1.length + 2)];
+	    var jump = [instruction.jump(codes2.length + 1)];
+	    var parts = [ split, codes1, jump, codes2 ];
+	    return parts.reduce(concat);
+	  };
+	  return childCodes.reduce(reducer);
+	};
+
+	codes.zeroOrOne = function(expr) {
+	  var codes = compile(expr.children[0]);
+	  var split = [instruction.split(codes.length + 1)];
+	  return concat(split, codes);
+	};
+
+	codes.zeroOrMore = function(expr) {
+	  var codes = compile(expr.children[0]);
+	  var split = [instruction.split(codes.length + 2)];
+	  var jump = [instruction.jump(-codes.length - 1)];
+	  var parts = [split, codes, jump];
+	  return parts.reduce(concat);
+	};
+
+	codes.oneOrMore = function(expr) {
+	  var codes = compile(expr.children[0]);
+	  var split = [instruction.split(-codes.length)];
+	  return concat(codes, split);
+	};
+
+	codes.root = function(expr) {
+	  var childCodes = compile(expr.children[0]);
+	  var match = instruction.match();
+	  return childCodes.concat([match]);
+	};
+
+	var thread = function(position) {
+	  return { position: position };
+	};
+
+	var addThread = function(t, threads) {
+	  var positions = threads.map(function(x) { return x.position; });
+	  if (positions.indexOf(t.position) == -1) {
+	    threads.push(t);
+	  }
+	};
+
+	var threadList = function() {
+	  var positions = {};
+	  var threads = [];
+	  var addThread = function(t) {
+	    if (!(t.position in positions)) {
+	      threads.push(t);
+	      positions[t.position] = t;
+	    }
+	  };
+	  return { positions: positions, threads: threads, addThread: addThread };
+	};
+
+	var thompson = function(program, input, env) {
+	  var currentThreads = threadList();
+	  currentThreads.addThread(thread(0));
+	  for (var i = 0; i <= input.length; i++) {
+	    var nextThreads = threadList();
+	    for (var j = 0; j < currentThreads.threads.length; j++) {
+	      var t = currentThreads.threads[j];
+	      var instr = program[t.position];
+	      switch(instr.type) {
+		case 'predicate':
+		  var pred = env(instr.name);
+		  if (pred(input[i])) {
+		    nextThreads.addThread(thread(t.position + 1));
+		  }
+		  break;
+		case 'match':
+		  if (i == input.length) {
+		    return true;
+		  }
+		  break;
+		case 'split':
+		  currentThreads.addThread(thread(t.position + 1));
+		  currentThreads.addThread(thread(t.position + instr.increment));
+		  break;
+		case 'jump':
+		  currentThreads.addThread(thread(t.position + instr.increment));
+		  break;
+	      }
+	    }
+	    currentThreads = nextThreads;
+	  }
+	  return false;
+	};
+
+	module.exports = {
+	  compile: compile,
+	  run: thompson
+	};
+
+
+/***/ },
+/* 413 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var util = __webpack_require__(414);
+	var fragment = __webpack_require__(417);
 
 	var indexedFragmentStates = function(fragment) {
 	  var nextIndex = 0;
@@ -36891,53 +37671,29 @@
 	};
 
 	var evalFunctions = {};
-	var evalExpression = function(expr, env) {
+	var evalExpression = function(expr) {
 	  if (expr.type == null) {
 	    var exprString = util.inspect(expr);
 	    throw "Expression has no type: " + exprString;
 	  } else if (!(expr.type in evalFunctions)) {
 	    throw "No evaluation function for expression type '" + expr.type + "'";
 	  } else {
-	    return evalFunctions[expr.type](expr, env);
+	    return evalFunctions[expr.type](expr);
 	  }
 	};
 
 	var evalChildThen = function(wrapper) {
-	  return function(expr, env) {
-	    var childFrag = evalExpression(expr.children[0], env);
+	  return function(expr) {
+	    var childFrag = evalExpression(expr.children[0]);
 	    return wrapper(childFrag);
 	  };
 	};
 
 	var evalChildrenThen = function(wrapper) {
-	  return function(expr, env) {
-	    var evalChild = function(child) { return evalExpression(child, env); };
+	  return function(expr) {
+	    var evalChild = function(child) { return evalExpression(child); };
 	    var childFrags = expr.children.map(evalChild);
 	    return wrapper(childFrags);
-	  };
-	};
-
-	var undefinedSymbol = function(symbol) {
-	  throw "Undefined symbol '" + symbol + "'";
-	};
-
-	var lookup = function(name, env) {
-	  switch(typeof env) {
-	    case 'function':
-	      var value = env(name);
-	      if (value != null) {
-		return value;
-	      } else {
-		undefinedSymbol(name);
-	      }
-	    case 'object':
-	      if (name in env) {
-		return env[name];
-	      } else {
-		undefinedSymbol(name);
-	      }
-	    default:
-	      throw 'Environment must be object or function'
 	  };
 	};
 
@@ -36947,15 +37703,14 @@
 	evalFunctions.zeroOrMore = evalChildThen(fragment.zeroOrMore);
 	evalFunctions.oneOrMore = evalChildThen(fragment.oneOrMore);
 	evalFunctions.zeroOrOne = evalChildThen(fragment.zeroOrOne);
-	evalFunctions.predicate = function(expr, env) {
+	evalFunctions.predicate = function(expr) {
 	  var name = expr.data.name;
-	  var pred = lookup(name, env);
-	  return fragment.predicate(name, pred);
+	  return fragment.predicate(name);
 	};
 
-	var build = function(parsedRegex, env) {
-	  var fragment = evalExpression(parsedRegex, env);
-	  var util=__webpack_require__(406);
+	var compile = function(parsedRegex) {
+	  var fragment = evalExpression(parsedRegex);
+	  var util=__webpack_require__(414);
 	  var states = indexedFragmentStates(fragment);
 	  var numStates = states.length;
 	  var nfaTransitions = {};
@@ -36966,7 +37721,7 @@
 	    };
 	    var outTrans = {};
 	    state.transitions.map(function(fragTrans) {
-	      outTrans[fragTrans.target.index] = fragTrans.test;
+	      outTrans[fragTrans.target.index] = fragTrans.name;
 	    });
 	    nfaTransitions[state.index] = outTrans;
 	  });
@@ -37001,13 +37756,13 @@
 	};
 
 	module.exports = {
-	  build: build,
+	  compile: compile,
 	  simulate: simulate
 	};
 
 
 /***/ },
-/* 406 */
+/* 414 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -37535,7 +38290,7 @@
 	}
 	exports.isPrimitive = isPrimitive;
 
-	exports.isBuffer = __webpack_require__(407);
+	exports.isBuffer = __webpack_require__(415);
 
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -37579,7 +38334,7 @@
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(408);
+	exports.inherits = __webpack_require__(416);
 
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -37600,7 +38355,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(14)))
 
 /***/ },
-/* 407 */
+/* 415 */
 /***/ function(module, exports) {
 
 	module.exports = function isBuffer(arg) {
@@ -37611,7 +38366,7 @@
 	}
 
 /***/ },
-/* 408 */
+/* 416 */
 /***/ function(module, exports) {
 
 	if (typeof Object.create === 'function') {
@@ -37640,19 +38395,11 @@
 
 
 /***/ },
-/* 409 */
+/* 417 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var predicates = __webpack_require__(410);
-	var transitionTest = function(name, predicate, increment) {
-	  return {
-	    name: name,
-	    predicate: predicate,
-	    increment: increment
-	  }
-	};
-	var eps = "\u03B5";
-	var epsilonTest = transitionTest(eps, predicates.alwaysTrue, false);
+	var predicates = __webpack_require__(411);
+	var epsilon = "\u03B5";
 
 	var fragmentState = function(transitions, index) {
 	  return {
@@ -37661,9 +38408,9 @@
 	  };
 	};
 
-	var fragmentTransition = function(test, target) {
+	var fragmentTransition = function(name, target) {
 	  return {
-	    test: test,
+	    name: name,
 	    target: target
 	  };
 	};
@@ -37683,9 +38430,8 @@
 
 	var build = {};
 
-	build.predicate = function(name, predicate) {
-	  var test = transitionTest(name, predicate, true);
-	  var trans = fragmentTransition(test, null);
+	build.predicate = function(name) {
+	  var trans = fragmentTransition(name, null);
 	  var head = fragmentState([trans]);
 	  var tails = [trans];
 	  return fragment(head, tails);
@@ -37703,8 +38449,8 @@
 
 	build.alternation = function(frags) {
 	  var binaryAlt = function(frag1, frag2) {
-	    var trans1 = fragmentTransition(epsilonTest, frag1.head);
-	    var trans2 = fragmentTransition(epsilonTest, frag2.head);
+	    var trans1 = fragmentTransition(epsilon, frag1.head);
+	    var trans2 = fragmentTransition(epsilon, frag2.head);
 	    var head = fragmentState([trans1, trans2]);
 	    var tails = frag1.tails.concat(frag2.tails);
 	    return fragment(head, tails);
@@ -37713,24 +38459,24 @@
 	};
 
 	build.zeroOrMore = function(frag) {
-	  var loopTrans = fragmentTransition(epsilonTest, frag.head);
-	  var breakTrans = fragmentTransition(epsilonTest, null);
+	  var loopTrans = fragmentTransition(epsilon, frag.head);
+	  var breakTrans = fragmentTransition(epsilon, null);
 	  var head = fragmentState([loopTrans, breakTrans]);
 	  patch(frag.tails, head);
 	  return fragment(head, [breakTrans]);
 	};
 
 	build.oneOrMore = function(frag) {
-	  var loopTrans = fragmentTransition(epsilonTest, frag.head);
-	  var breakTrans = fragmentTransition(epsilonTest, null);
+	  var loopTrans = fragmentTransition(epsilon, frag.head);
+	  var breakTrans = fragmentTransition(epsilon, null);
 	  var state = fragmentState([loopTrans, breakTrans]);
 	  patch(frag.tails, state);
 	  return fragment(frag.head, [breakTrans]);
 	};
 
 	build.zeroOrOne = function(frag) {
-	  var matchTrans = fragmentTransition(epsilonTest, frag.head);
-	  var skipTrans = fragmentTransition(epsilonTest, null);
+	  var matchTrans = fragmentTransition(epsilon, frag.head);
+	  var skipTrans = fragmentTransition(epsilon, null);
 	  var head = fragmentState([matchTrans, skipTrans]);
 	  var tails = frag.tails.concat([skipTrans]);
 	  return fragment(head, tails);
@@ -37746,653 +38492,203 @@
 
 
 /***/ },
-/* 410 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  alwaysTrue: function() {
-	    return true;
-	  },
-	  equals: function(x) {
-	    return function(y) {
-	      return x == y;
-	    }
-	  }
-	};
-
-
-/***/ },
-/* 411 */
+/* 418 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var syntax = __webpack_require__(412);
-	var Parsimmon = __webpack_require__(413);
-	Parsimmon.sepBy1 = function(parser, separator) {
-	  var pairs = separator.then(parser).many();
-	  return parser.chain(function(r) {
-	    return pairs.map(function(rs) {
-	      return [r].concat(rs);
-	    })
-	  })
-	};
+	var React = __webpack_require__(12);
+	var Bootstrap = __webpack_require__(169);
+	var Input = Bootstrap.Input;
+	var Figure = __webpack_require__(419);
 
-	var pipe = Parsimmon.string('|');
-	var lparen = Parsimmon.string('(');
-	var rparen = Parsimmon.string(')');
-	var star = Parsimmon.string('*');
-	var plus = Parsimmon.string('+');
-	var qmark = Parsimmon.string('?');
-	var dot = Parsimmon.string('.');
-
-	var parenthesized = function(parser) {
-	  return lparen.then(parser).skip(rparen);
-	};
-
-	var suffixOperator = function(operator, fn) {
-	  return function(parser) {
-	    return parser.skip(operator).map(fn);
-	  }
-	};
-
-	var plussed = suffixOperator(plus, syntax.oneOrMore);
-	var starred = suffixOperator(star, syntax.zeroOrMore);
-	var qmarked = suffixOperator(qmark, syntax.zeroOrOne);
-
-	var simpleCharRegex = function() {
-	  var root = Parsimmon.lazy('a simple, character-based regex', function() {
-	    return regex.map(syntax.root);
-	  });
-	  var regex = Parsimmon.lazy('regex', function() {
-	    return Parsimmon.sepBy1(branch, pipe).map(syntax.alternation);
-	  });
-	  var character = Parsimmon.regex(/[A-z]/).map(function(ch) {
-	    return syntax.predicate(ch);
-	  }).desc('character literal');
-	  var any = dot.map(function() {
-	    return syntax.predicate('.');
-	  }).desc('wildcard');
-	  var atom = Parsimmon.alt(parenthesized(regex), character, any).desc('atom');
-	  var piece = Parsimmon.alt(starred(atom), plussed(atom), qmarked(atom), atom).desc('piece');
-	  var branch = piece.atLeast(1).map(syntax.concatenation).desc('branch');
-	  return function(input) {
-	    var result = root.parse(input);
-	    if (result.status) {
-	      result.value.input = input;
+	var wrapInteractiveFigure = function(Component, propName) {
+	  return React.createClass({
+	    getInitialState: function() {
+	      return { value: this.props[propName] };
+	    },
+	    componentDidMount: function() {
+	      this.setState({value: this.props.defaultValue });
+	    },
+	    setChildState: function(val) {
+	      var state = this.state;
+	      state[propName] = val;
+	      this.setState(state);
+	    },
+	    getInputValue: function() {
+	      var node = React.findDOMNode(this.refs.input);
+	      var val = node.getElementsByTagName('input')[0].value
+	      return val;
+	    },
+	    handleSubmit: function(e) {
+	      e.preventDefault();
+	      this.setChildState(this.getInputValue());
+	    },
+	    render: function() {
+	      var caption = this.props.caption;
+	      var captionComponent;
+	      var input = React.createElement(Input, {ref: "input", type: "text", defaultValue: this.state.value});
+	      var button = React.createElement(Bootstrap.Button, null, "Submit");
+	      input = React.cloneElement(input, {buttonAfter: button});
+	      if (caption) {
+	        captionComponent = React.createElement("div", {className: "caption"}, caption);
+	      }
+	      return (
+		React.createElement(Figure, null, 
+		  React.createElement("form", {onSubmit: this.handleSubmit}, input), 
+		  React.createElement(Component, React.__spread({},  this.props,  this.state))
+		)
+	      );
 	    }
-	    return result;
-	  }
-	}();
-
-	module.exports = {
-	  simpleCharRegex: simpleCharRegex
+	  });
 	};
+
+	module.exports = wrapInteractiveFigure;
 
 
 /***/ },
-/* 412 */
-/***/ function(module, exports) {
-
-	var expression = function(type, children, data) {
-	  return {
-	    type: type,
-	    children: children ? children : [],
-	    data: data ? data : {}
-	  };
-	};
-
-	var withOneChild = function(name) {
-	  return function(expr, data) {
-	    return expression(name, [expr], data);
-	  };
-	};
-
-	var withMultipleChildren = function(name) {
-	  return function(exprs, data) {
-	    if (exprs.length == 0) {
-	      throw name + ' takes at least one child node';
-	    } else if (exprs.length == 1) {
-	      return exprs[0];
-	    } else {
-	      return expression(name, exprs, data);
-	    }
-	  };
-	};
-
-	var expressions = {
-	  predicate: function(name) {
-	    var data = {name: name};
-	    var children = [];
-	    return expression('predicate', children, data);
-	  },
-	  concatenation: withMultipleChildren('concatenation'),
-	  alternation: withMultipleChildren('alternation'),
-	  zeroOrMore: withOneChild('zeroOrMore'),
-	  oneOrMore: withOneChild('oneOrMore'),
-	  zeroOrOne: withOneChild('zeroOrOne'),
-	  root: withOneChild('root')
-	}
-
-	module.exports = expressions;
-
-
-/***/ },
-/* 413 */
+/* 419 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(414);
-	exports.version = __webpack_require__(415).version;
+	var React = __webpack_require__(12);
+	var Bootstrap = __webpack_require__(169);
+	var Figure = React.createClass({displayName: "Figure",
+	  render: function() {
+	    var caption = this.props.caption;
+	    var captionComponent;
+	    if (caption) {
+	      captionComponent = React.createElement("div", {className: "caption"}, caption);
+	    }
+	    var content = this.props.children;
+	    return (
+	      React.createElement("div", {className: "figure"}, 
+		React.createElement(Bootstrap.Panel, {className: "figureBox"}, 
+		  content
+		), 
+		captionComponent
+	      )
+	    );
+	  }
+	});
+	module.exports = Figure;
 
 
 /***/ },
-/* 414 */
-/***/ function(module, exports) {
-
-	// pass
-	var Parsimmon = {};
-
-	Parsimmon.Parser = (function() {
-	  "use strict";
-
-	  // The Parser object is a wrapper for a parser function.
-	  // Externally, you use one to parse a string by calling
-	  //   var result = SomeParser.parse('Me Me Me! Parse Me!');
-	  // You should never call the constructor, rather you should
-	  // construct your Parser from the base parsers and the
-	  // parser combinator methods.
-	  function Parser(action) {
-	    if (!(this instanceof Parser)) return new Parser(action);
-	    this._ = action;
-	  };
-
-	  var _ = Parser.prototype;
-
-	  function makeSuccess(index, value) {
-	    return {
-	      status: true,
-	      index: index,
-	      value: value,
-	      furthest: -1,
-	      expected: []
-	    };
-	  }
-
-	  function makeFailure(index, expected) {
-	    return {
-	      status: false,
-	      index: -1,
-	      value: null,
-	      furthest: index,
-	      expected: [expected]
-	    };
-	  }
-
-	  function mergeReplies(result, last) {
-	    if (!last) return result;
-	    if (result.furthest > last.furthest) return result;
-
-	    var expected = (result.furthest === last.furthest)
-	      ? result.expected.concat(last.expected)
-	      : last.expected;
-
-	    return {
-	      status: result.status,
-	      index: result.index,
-	      value: result.value,
-	      furthest: last.furthest,
-	      expected: expected
-	    }
-	  }
-
-	  function assertParser(p) {
-	    if (!(p instanceof Parser)) throw new Error('not a parser: '+p);
-	  }
-
-	  function formatExpected(expected) {
-	    if (expected.length === 1) return expected[0];
-
-	    return 'one of ' + expected.join(', ')
-	  }
-
-	  function formatGot(stream, error) {
-	    var i = error.index;
-
-	    if (i === stream.length) return ', got the end of the stream'
-
-
-	    var prefix = (i > 0 ? "'..." : "'");
-	    var suffix = (stream.length - i > 12 ? "...'" : "'");
-
-	    return ' at character ' + i + ', got ' + prefix + stream.slice(i, i+12) + suffix
-	  }
-
-	  var formatError = Parsimmon.formatError = function(stream, error) {
-	    return 'expected ' + formatExpected(error.expected) + formatGot(stream, error)
-	  };
-
-	  _.parse = function(stream) {
-	    var result = this.skip(eof)._(stream, 0);
-
-	    return result.status ? {
-	      status: true,
-	      value: result.value
-	    } : {
-	      status: false,
-	      index: result.furthest,
-	      expected: result.expected
-	    };
-	  };
-
-	  // [Parser a] -> Parser [a]
-	  var seq = Parsimmon.seq = function() {
-	    var parsers = [].slice.call(arguments);
-	    var numParsers = parsers.length;
-
-	    return Parser(function(stream, i) {
-	      var result;
-	      var accum = new Array(numParsers);
-
-	      for (var j = 0; j < numParsers; j += 1) {
-	        result = mergeReplies(parsers[j]._(stream, i), result);
-	        if (!result.status) return result;
-	        accum[j] = result.value
-	        i = result.index;
-	      }
-
-	      return mergeReplies(makeSuccess(i, accum), result);
-	    });
-	  };
-
-
-	  var seqMap = Parsimmon.seqMap = function() {
-	    var args = [].slice.call(arguments);
-	    var mapper = args.pop();
-	    return seq.apply(null, args).map(function(results) {
-	      return mapper.apply(null, results);
-	    });
-	  };
-
-	  /**
-	   * Allows to add custom primitive parsers
-	   */
-	  var custom = Parsimmon.custom = function(parsingFunction) {
-	    return Parser(parsingFunction(makeSuccess, makeFailure));
-	  };
-
-	  var alt = Parsimmon.alt = function() {
-	    var parsers = [].slice.call(arguments);
-	    var numParsers = parsers.length;
-	    if (numParsers === 0) return fail('zero alternates')
-
-	    return Parser(function(stream, i) {
-	      var result;
-	      for (var j = 0; j < parsers.length; j += 1) {
-	        result = mergeReplies(parsers[j]._(stream, i), result);
-	        if (result.status) return result;
-	      }
-	      return result;
-	    });
-	  };
-
-	  // -*- primitive combinators -*- //
-	  _.or = function(alternative) {
-	    return alt(this, alternative);
-	  };
-
-	  _.then = function(next) {
-	    if (typeof next === 'function') {
-	      throw new Error('chaining features of .then are no longer supported, use .chain instead');
-	    }
-
-	    assertParser(next);
-	    return seq(this, next).map(function(results) { return results[1]; });
-	  };
-
-	  // -*- optimized iterative combinators -*- //
-	  // equivalent to:
-	  // _.many = function() {
-	  //   return this.times(0, Infinity);
-	  // };
-	  // or, more explicitly:
-	  // _.many = function() {
-	  //   var self = this;
-	  //   return self.then(function(x) {
-	  //     return self.many().then(function(xs) {
-	  //       return [x].concat(xs);
-	  //     });
-	  //   }).or(succeed([]));
-	  // };
-	  _.many = function() {
-	    var self = this;
-
-	    return Parser(function(stream, i) {
-	      var accum = [];
-	      var result;
-	      var prevResult;
-
-	      for (;;) {
-	        result = mergeReplies(self._(stream, i), result);
-
-	        if (result.status) {
-	          i = result.index;
-	          accum.push(result.value);
-	        }
-	        else {
-	          return mergeReplies(makeSuccess(i, accum), result);
-	        }
-	      }
-	    });
-	  };
-
-	  // equivalent to:
-	  // _.times = function(min, max) {
-	  //   if (arguments.length < 2) max = min;
-	  //   var self = this;
-	  //   if (min > 0) {
-	  //     return self.then(function(x) {
-	  //       return self.times(min - 1, max - 1).then(function(xs) {
-	  //         return [x].concat(xs);
-	  //       });
-	  //     });
-	  //   }
-	  //   else if (max > 0) {
-	  //     return self.then(function(x) {
-	  //       return self.times(0, max - 1).then(function(xs) {
-	  //         return [x].concat(xs);
-	  //       });
-	  //     }).or(succeed([]));
-	  //   }
-	  //   else return succeed([]);
-	  // };
-	  _.times = function(min, max) {
-	    if (arguments.length < 2) max = min;
-	    var self = this;
-
-	    return Parser(function(stream, i) {
-	      var accum = [];
-	      var start = i;
-	      var result;
-	      var prevResult;
-
-	      for (var times = 0; times < min; times += 1) {
-	        result = self._(stream, i);
-	        prevResult = mergeReplies(result, prevResult);
-	        if (result.status) {
-	          i = result.index;
-	          accum.push(result.value);
-	        }
-	        else return prevResult;
-	      }
-
-	      for (; times < max; times += 1) {
-	        result = self._(stream, i);
-	        prevResult = mergeReplies(result, prevResult);
-	        if (result.status) {
-	          i = result.index;
-	          accum.push(result.value);
-	        }
-	        else break;
-	      }
-
-	      return mergeReplies(makeSuccess(i, accum), prevResult);
-	    });
-	  };
-
-	  // -*- higher-level combinators -*- //
-	  _.result = function(res) { return this.map(function(_) { return res; }); };
-	  _.atMost = function(n) { return this.times(0, n); };
-	  _.atLeast = function(n) {
-	    var self = this;
-	    return seqMap(this.times(n), this.many(), function(init, rest) {
-	      return init.concat(rest);
-	    });
-	  };
-
-	  _.map = function(fn) {
-	    var self = this;
-	    return Parser(function(stream, i) {
-	      var result = self._(stream, i);
-	      if (!result.status) return result;
-	      return mergeReplies(makeSuccess(result.index, fn(result.value)), result);
-	    });
-	  };
-
-	  _.skip = function(next) {
-	    return seq(this, next).map(function(results) { return results[0]; });
-	  };
-
-	  _.mark = function() {
-	    return seqMap(index, this, index, function(start, value, end) {
-	      return { start: start, value: value, end: end };
-	    });
-	  };
-
-	  _.desc = function(expected) {
-	    var self = this;
-	    return Parser(function(stream, i) {
-	      var reply = self._(stream, i);
-	      if (!reply.status) reply.expected = [expected];
-	      return reply;
-	    });
-	  };
-
-	  // -*- primitive parsers -*- //
-	  var string = Parsimmon.string = function(str) {
-	    var len = str.length;
-	    var expected = "'"+str+"'";
-
-	    return Parser(function(stream, i) {
-	      var head = stream.slice(i, i+len);
-
-	      if (head === str) {
-	        return makeSuccess(i+len, head);
-	      }
-	      else {
-	        return makeFailure(i, expected);
-	      }
-	    });
-	  };
-
-	  var regex = Parsimmon.regex = function(re, group) {
-	    var anchored = RegExp('^(?:'+re.source+')', (''+re).slice((''+re).lastIndexOf('/')+1));
-	    var expected = '' + re;
-	    if (group == null) group = 0;
-
-	    return Parser(function(stream, i) {
-	      var match = anchored.exec(stream.slice(i));
-
-	      if (match) {
-	        var fullMatch = match[0];
-	        var groupMatch = match[group];
-	        if (groupMatch != null) return makeSuccess(i+fullMatch.length, groupMatch);
-	      }
-
-	      return makeFailure(i, expected);
-	    });
-	  };
-
-	  var succeed = Parsimmon.succeed = function(value) {
-	    return Parser(function(stream, i) {
-	      return makeSuccess(i, value);
-	    });
-	  };
-
-	  var fail = Parsimmon.fail = function(expected) {
-	    return Parser(function(stream, i) { return makeFailure(i, expected); });
-	  };
-
-	  var letter = Parsimmon.letter = regex(/[a-z]/i).desc('a letter')
-	  var letters = Parsimmon.letters = regex(/[a-z]*/i)
-	  var digit = Parsimmon.digit = regex(/[0-9]/).desc('a digit');
-	  var digits = Parsimmon.digits = regex(/[0-9]*/)
-	  var whitespace = Parsimmon.whitespace = regex(/\s+/).desc('whitespace');
-	  var optWhitespace = Parsimmon.optWhitespace = regex(/\s*/);
-
-	  var any = Parsimmon.any = Parser(function(stream, i) {
-	    if (i >= stream.length) return makeFailure(i, 'any character');
-
-	    return makeSuccess(i+1, stream.charAt(i));
-	  });
-
-	  var all = Parsimmon.all = Parser(function(stream, i) {
-	    return makeSuccess(stream.length, stream.slice(i));
-	  });
-
-	  var eof = Parsimmon.eof = Parser(function(stream, i) {
-	    if (i < stream.length) return makeFailure(i, 'EOF');
-
-	    return makeSuccess(i, null);
-	  });
-
-	  var test = Parsimmon.test = function(predicate) {
-	    return Parser(function(stream, i) {
-	      var char = stream.charAt(i);
-	      if (i < stream.length && predicate(char)) {
-	        return makeSuccess(i+1, char);
-	      }
-	      else {
-	        return makeFailure(i, 'a character matching '+predicate);
-	      }
-	    });
-	  };
-
-	  var oneOf = Parsimmon.oneOf = function(str) {
-	    return test(function(ch) { return str.indexOf(ch) >= 0; });
-	  };
-
-	  var noneOf = Parsimmon.noneOf = function(str) {
-	    return test(function(ch) { return str.indexOf(ch) < 0; });
-	  };
-
-	  var takeWhile = Parsimmon.takeWhile = function(predicate) {
-	    return Parser(function(stream, i) {
-	      var j = i;
-	      while (j < stream.length && predicate(stream.charAt(j))) j += 1;
-	      return makeSuccess(j, stream.slice(i, j));
-	    });
-	  };
-
-	  var lazy = Parsimmon.lazy = function(desc, f) {
-	    if (arguments.length < 2) {
-	      f = desc;
-	      desc = undefined;
-	    }
-
-	    var parser = Parser(function(stream, i) {
-	      parser._ = f()._;
-	      return parser._(stream, i);
-	    });
-
-	    if (desc) parser = parser.desc(desc)
-
-	    return parser;
-	  };
-
-	  var index = Parsimmon.index = Parser(function(stream, i) {
-	    return makeSuccess(i, i);
-	  });
-
-	  //- fantasyland compat
-
-	  //- Monoid (Alternative, really)
-	  _.concat = _.or;
-	  _.empty = fail('empty')
-
-	  //- Applicative
-	  _.of = Parser.of = Parsimmon.of = succeed
-
-	  _.ap = function(other) {
-	    return seqMap(this, other, function(f, x) { return f(x); })
-	  };
-
-	  //- Monad
-	  _.chain = function(f) {
-	    var self = this;
-	    return Parser(function(stream, i) {
-	      var result = self._(stream, i);
-	      if (!result.status) return result;
-	      var nextParser = f(result.value);
-	      return mergeReplies(nextParser._(stream, result.index), result);
-	    });
-	  };
-
-	  return Parser;
-	})();
-	module.exports = Parsimmon;
+/* 420 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(12);
+	var InteractiveFigure = __webpack_require__(418);
+	var NfaViewer = __webpack_require__(421);
+	module.exports = InteractiveFigure(NfaViewer, 'regex');
 
 
 /***/ },
-/* 415 */
-/***/ function(module, exports) {
+/* 421 */
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {
-		"name": "parsimmon",
-		"version": "0.7.0",
-		"description": "A monadic LL(infinity) parser combinator library",
-		"keywords": [
-			"parsing",
-			"parse",
-			"parser combinators"
-		],
-		"author": {
-			"name": "Jeanine Adkisson",
-			"email": "jneen at jneen dot net"
-		},
-		"repository": {
-			"type": "git",
-			"url": "git://github.com/jneen/parsimmon.git"
-		},
-		"files": [
-			"index.js",
-			"src",
-			"test",
-			"Makefile",
-			"package.json",
-			"build/parsimmon.commonjs.js",
-			"build/parsimmon.browser.js",
-			"build/parsimmon.browser.min.js"
-		],
-		"main": "index.js",
-		"devDependencies": {
-			"mocha": "1.8.x",
-			"chai": "1.5.x",
-			"uglify-js": "2.x"
-		},
-		"dependencies": {
-			"pjs": "5.x"
-		},
-		"scripts": {
-			"test": "make test"
-		},
-		"bugs": {
-			"url": "https://github.com/jneen/parsimmon/issues"
-		},
-		"homepage": "https://github.com/jneen/parsimmon",
-		"_id": "parsimmon@0.7.0",
-		"_shasum": "652fc7cbade73c5edb42a266ec556c906d82c9fb",
-		"_resolved": "https://registry.npmjs.org/parsimmon/-/parsimmon-0.7.0.tgz",
-		"_from": "parsimmon@*",
-		"_npmVersion": "1.4.14",
-		"_npmUser": {
-			"name": "jayferd",
-			"email": "jjmadkisson@gmail.com"
-		},
-		"maintainers": [
-			{
-				"name": "jayferd",
-				"email": "jjmadkisson@gmail.com"
-			},
-			{
-				"name": "jneen",
-				"email": "jneen@jneen.net"
-			}
-		],
-		"dist": {
-			"shasum": "652fc7cbade73c5edb42a266ec556c906d82c9fb",
-			"tarball": "http://registry.npmjs.org/parsimmon/-/parsimmon-0.7.0.tgz"
-		},
-		"directories": {},
-		"readme": "ERROR: No README data found!"
-	}
+	var React = __webpack_require__(12);
+	var Bootstrap = __webpack_require__(169);
+	var vis = __webpack_require__(401);
+	var visualization = __webpack_require__(402);
+	var CharRegex = __webpack_require__(403);
+	var NfaViewer = React.createClass({displayName: "NfaViewer",
+	  drawGraph: function() {
+	    var cont = React.findDOMNode(this.refs.container);
+	    var data = visualization.nfaGraph(this.regex.nfa);
+	    var net = new vis.Network(cont, data, visualization.config.nfa);
+	    var parentHeight = React.findDOMNode(this).offsetHeight;
+	    net.setOptions({height: String(parentHeight)});
+	  },
+	  componentDidMount: function() {
+	    if (this.didCompile) this.drawGraph();
+	  },
+	  componentDidUpdate: function() {
+	    if (this.didCompile) this.drawGraph();
+	  },
+	  render: function() {
+	    try {
+	      this.regex = new CharRegex(this.props.regex);
+	      this.didCompile = true;
+	      return React.createElement("div", {ref: "container"});
+	    } catch(err) {
+	      this.didCompile = false;
+	      return React.createElement(Bootstrap.Alert, {bsStyle: "danger"}, err);
+	    }
+	  }
+	});
+	module.exports = NfaViewer;
+
+
+/***/ },
+/* 422 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(12);
+	var InteractiveFigure = __webpack_require__(418);
+	var ProgramViewer = __webpack_require__(423);
+	module.exports = InteractiveFigure(ProgramViewer, 'regex');
+
+
+/***/ },
+/* 423 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(12);
+	var Bootstrap = __webpack_require__(169);
+	var CharRegex = __webpack_require__(403);
+
+	var render = {};
+	render.predicate = function(instr) {
+	  return 'equals ' + instr.name;
+	};
+	render.jump = function(instr, i) {
+	  var target = i + instr.increment;
+	  return 'jump to ' + target;
+	};
+	render.split = function(instr, i) {
+	  var target1 = i + 1;
+	  var target2 = i + instr.increment;
+	  return 'split to ' + target1 + ', ' + target2;
+	};
+	render.match = function(instr, i) {
+	  return 'match';
+	};
+
+	var ProgramViewer = React.createClass({displayName: "ProgramViewer",
+	  renderRow: function(instr, i) {
+	    var string = render[instr.type](instr, i);
+	    return (
+	      React.createElement("tr", {key: i}, 
+	        React.createElement("td", null, i), 
+	        React.createElement("td", null, string)
+	      )
+	    );
+	  },
+	  render: function() {
+	    try {
+	      var regex = new CharRegex(this.props.regex);
+	      var rows = regex.program.map(this.renderRow);
+	      return (
+		React.createElement("div", {className: "program"}, 
+	      React.createElement(Bootstrap.Table, null, 
+		React.createElement("thead", null, 
+	          React.createElement("tr", null, 
+	            React.createElement("th", null, "Program Counter"), 
+	            React.createElement("th", null, "Instruction")
+	          )
+	        ), 
+	        React.createElement("tbody", null, 
+	          rows
+	        )
+	      )
+	      )
+	      );
+	    } catch (err) {
+	      return React.createElement(Bootstrap.Alert, {bsStyle: "danger"}, err);
+	    }
+	  }
+	});
+	module.exports = ProgramViewer;
+
 
 /***/ }
 /******/ ]);
