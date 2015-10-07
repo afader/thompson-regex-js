@@ -11,6 +11,10 @@ em {
   padding: 2px;
 }
 
+.program {
+  overflow: auto;
+}
+
 .figure > .panel > .panel-body {
   width: 100%;
   margin-bottom: 5px;

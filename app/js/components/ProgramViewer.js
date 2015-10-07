@@ -1,5 +1,6 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
+var CharRegex = require('../../../lib/CharRegex.js');
 
 var render = {};
 render.predicate = function(instr) {
@@ -23,27 +24,33 @@ var ProgramViewer = React.createClass({
     var string = render[instr.type](instr, i);
     return (
       <tr key={i}>
-	<td>{i}</td>
-	<td>{string}</td>
+        <td>{i}</td>
+        <td>{string}</td>
       </tr>
     );
   },
   render: function() {
-    var regex = this.props.regex;
-    var rows = regex.program.map(this.renderRow);
-    return (
+    try {
+      var regex = new CharRegex(this.props.regex);
+      var rows = regex.program.map(this.renderRow);
+      return (
+	<div className="program">
       <Bootstrap.Table>
 	<thead>
-	  <tr>
-	    <th>Program Counter</th>
-	    <th>Instruction</th>
-	  </tr>
-	</thead>
-	<tbody>
-	  {rows}
-	</tbody>
+          <tr>
+            <th>Program Counter</th>
+            <th>Instruction</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows}
+        </tbody>
       </Bootstrap.Table>
-    );
+      </div>
+      );
+    } catch (err) {
+      return <Bootstrap.Alert bsStyle="danger">{err}</Bootstrap.Alert>;
+    }
   }
 });
 module.exports = ProgramViewer;
