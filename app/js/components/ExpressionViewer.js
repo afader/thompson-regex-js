@@ -1,13 +1,13 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var vis = require('vis');
-var visualization = require('../visualization.js');
+var visualization = require('../visualization/expression.js');
 var CharRegex = require('../../../lib/CharRegex.js');
 var ExpressionViewer = React.createClass({
   drawGraph: function() {
     var cont = React.findDOMNode(this.refs.container);
-    var data = visualization.expressionGraph(this.regex.expression);
-    var net = new vis.Network(cont, data, visualization.config.expression);
+    var data = visualization.visGraph(this.regex.expression);
+    var net = new vis.Network(cont, data, visualization.config);
     var parentHeight = React.findDOMNode(this).offsetHeight;
     net.setOptions({height: String(parentHeight)});
   },
