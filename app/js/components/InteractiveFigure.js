@@ -28,8 +28,8 @@ var wrapInteractiveFigure = function(Component, propName) {
     render: function() {
       var caption = this.props.caption;
       var captionComponent;
-      var input = <Input ref="input" type="text" defaultValue={this.state.value} />;
-      var button = <Bootstrap.Button>Submit</Bootstrap.Button>;
+      var input = <Input ref="input" type="text" defaultValue={this.state.value}/>;
+      var button = <Bootstrap.Button onClick={this.handleSubmit}>Submit</Bootstrap.Button>;
       input = React.cloneElement(input, {buttonAfter: button});
       if (caption) {
         captionComponent = <div className="caption">{caption}</div>;
