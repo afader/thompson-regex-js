@@ -1,19 +1,14 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var vis = require('vis');
-var x = require('../visualization/expression.js');
-//delete x.config.layout;
-var x = JSON.parse(JSON.stringify(x));
-delete x.config.layout;
+var visualization = require('../visualization/nfa.js');
 var CharRegex = require('../../../lib/CharRegex.js');
 var NfaViewer = React.createClass({
   drawGraph: function() {
     var cont = React.findDOMNode(this.refs.container);
-    var start = this.regex.nfa.start;
-    var end = this.regex.nfa.end;
-    this.regex.nfa.nodes.find(function(x) { return x.id == start }).color = 'red';
-    this.regex.nfa.nodes.find(function(x) { return x.id == end }).color = 'blue';
-    var net = new vis.Network(cont, this.regex.nfa, x.config);
+    var graph = visualization.visGraph(this.regex.nfa);
+    var net = new vis.Network(cont, graph, visualization.config);
+    net.on('afterDrawing', graph.drawEndState(net));
     var parentHeight = React.findDOMNode(this).offsetHeight;
     net.setOptions({height: String(parentHeight)});
   },
