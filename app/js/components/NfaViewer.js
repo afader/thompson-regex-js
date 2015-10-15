@@ -1,14 +1,21 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var vis = require('vis');
+var x = require('../visualization/expression.js');
+//delete x.config.layout;
+var x = JSON.parse(JSON.stringify(x));
+delete x.config.layout;
 var CharRegex = require('../../../lib/CharRegex.js');
 var NfaViewer = React.createClass({
   drawGraph: function() {
-/*    var cont = React.findDOMNode(this.refs.container);
-    var data = visualization.nfaGraph(this.regex.nfa);
-    var net = new vis.Network(cont, data, visualization.config.nfa);
+    var cont = React.findDOMNode(this.refs.container);
+    var start = this.regex.nfa.start;
+    var end = this.regex.nfa.end;
+    this.regex.nfa.nodes.find(function(x) { return x.id == start }).color = 'red';
+    this.regex.nfa.nodes.find(function(x) { return x.id == end }).color = 'blue';
+    var net = new vis.Network(cont, this.regex.nfa, x.config);
     var parentHeight = React.findDOMNode(this).offsetHeight;
-    net.setOptions({height: String(parentHeight)});*/
+    net.setOptions({height: String(parentHeight)});
   },
   componentDidMount: function() {
     if (this.didCompile) this.drawGraph();
@@ -23,7 +30,7 @@ var NfaViewer = React.createClass({
       return <div ref="container"></div>;
     } catch(err) {
       this.didCompile = false;
-      return <Bootstrap.Alert bsStyle="danger">{err}</Bootstrap.Alert>;
+      return <Bootstrap.Alert bsStyle="danger">{err.message}</Bootstrap.Alert>;
     }
   }
 });

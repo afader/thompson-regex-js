@@ -14,6 +14,8 @@ var App = React.createClass({
 	  expressions. This this visualizes the syntax of a regular expression
 	  as a tree.</p>
 	  <InteractiveExpression regex='a'/>
+	  <p>Now a visualization of an NFA.</p>
+	  <InteractiveNfa regex='a'/>
 	</Bootstrap.Col>
       </Bootstrap.Grid>
     );

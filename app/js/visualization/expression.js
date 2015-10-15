@@ -1,9 +1,5 @@
 var exprs = require('../../../lib/exprs.js');
 
-var callIfFunction = function(value) {
-  return typeof value == 'function' ? value() : value;
-};
-
 var visGraph = function(rootExpr) {
   // This function converts an expression tree to a vis.js graph. The strategy used is to 
   // evaluate the expression tree. The evaluation of each node in the tree mutates a vis.js 
@@ -15,8 +11,9 @@ var visGraph = function(rootExpr) {
   // Next define some helper functions to generate unique node ids and mutate the graph.
   var id = 0;
   var nextId = function() { return id++ };
-  var newNode = function(label) {
-    var node = { id: nextId(), label: label }
+  var newNode = function(label, level) {
+    level = level == null ? 0 : level;
+    var node = { id: nextId(), label: label, level: level };
     nodes.push(node);
     return node;
   };
@@ -29,14 +26,7 @@ var visGraph = function(rootExpr) {
     return newEdges;
   };
 
-  // The next step is to define how new nodes can be added to the vis.js graph. The first case is
-  // when encountering a quoted expression. In this case, we want to create a new 
-  // node that just contains the quoted character as the label. When the evaluator encounters a
-  // quote expression, it will call the following function with the literal value of the sub-
-  // expression as the argument. So the expression (quote c) will call the javascript function
-  // quoteNode("c") and return its value.
-  var quoteNode = newNode;
-  // The second case is when encountering a leaf node like whitespace or wildcard. In this case,
+  // The first case is when encountering a leaf node like whitespace or wildcard. In this case,
   // we want to create a new node in the graph that has the name of the leaf node. It is returned
   // so the parent expression has access to it. 
   var leafNode = function(name) {
@@ -44,16 +34,16 @@ var visGraph = function(rootExpr) {
       return newNode(name)
     }
   };
-  // The third case is when encountering an inner node like a concatenation. In this case, we want
+  // The second case is when encountering an inner node like a concatenation. In this case, we want
   // to create a new node and edges going from the new node to the nodes corresponding to the 
   // child expressions. Because inner nodes may have one or more argument expressions, we need to
   // access them via the javascript arguments object. 
   var innerNode = function(name) {
     return function() {
       var fromNode = newNode(name);
-      var argValues = exprs.getArgs(arguments);
-      var toNodes = argValues.map(callIfFunction); // hack since leaf nodes return 0-arg functions
+      var toNodes = exprs.getArgs(arguments);
       addEdges(fromNode, toNodes);
+      fromNode.level = Math.min.apply(this, toNodes.map(function(x) { return x.level })) - 1;
       return fromNode;
     }
   };
@@ -61,8 +51,18 @@ var visGraph = function(rootExpr) {
   // appear in expressions to values. In this case, all of the values in the symbol table are
   // functions that produce the side-effect of modifying the vis.js graph.
   var env = {
-    quote: quoteNode,
-    charEquals: innerNode('equals'),
+    quote: function(x) {
+      var arg = x[0];
+      if (exprs.isAtom(arg)) {
+	return newNode(arg);
+      } else {
+	var child = exprs.evaluate(arg, env);
+	return innerNode('quote')(child);
+      }
+    },
+    charEquals: innerNode('charEquals'),
+    inRange: innerNode('inRange'),
+    predicate: innerNode('predicate'),
     concatenation: innerNode('concat'),
     alternation: innerNode('alt'),
     zeroOrMore: innerNode('zeroOrMore'),
@@ -71,7 +71,6 @@ var visGraph = function(rootExpr) {
     root: innerNode('root'),
     oneOf: innerNode('oneOf'),
     noneOf: innerNode('noneOf'),
-    inRange: innerNode('inRange'),
     whitespace: leafNode('whitespace'),
     word: leafNode('word'),
     newline: leafNode('newline'),

@@ -24,7 +24,8 @@ var ExpressionViewer = React.createClass({
       return <div ref="container"></div>;
     } catch(err) {
       this.didCompile = false;
-      return <Bootstrap.Alert bsStyle="danger">{err}</Bootstrap.Alert>;
+      console.log(err.stack);
+      return <Bootstrap.Alert bsStyle="danger">{err.message}</Bootstrap.Alert>;
     }
   }
 });
