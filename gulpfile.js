@@ -24,6 +24,7 @@ var webpackConfig = {
     loaders: [
       { test: /\.css$/, loader: "style!css" },
       { test: /\.js$/, loader: "jsx-loader" },
+      { test: /\.js$/, loader: "babel-loader" },
       { test: /\.json$/, loader: "json-loader" },
       { test: /\.jsx$/, loader: "jsx-loader?insertPragma=React.DOM" },
       { test: /\.woff$/, loader: "url-loader?prefix=font/&limit=5000&mimetype=application/font-woff" },

@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/afader/thompson-regex-js#readme",
   "devDependencies": {
+    "babel-core": "^5.8.25",
+    "babel-loader": "^5.3.2",
     "css-loader": "^0.18.0",
     "del": "^2.0.2",
     "file-loader": "^0.8.4",
