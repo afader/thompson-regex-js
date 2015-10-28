@@ -1,3 +1,23 @@
+line {
+  stroke-width: 1px;
+  stroke: black;
+}
+
+#marker-arrow path {
+  fill: black;
+}
+
+.arrow {
+  marker-end: url(#marker-arrow)
+}
+
+path {
+  fill: none;
+  stroke-width: 1px;
+  stroke: black;
+  marker-end: url(#marker-arrow)
+}
+
 .code {
   font-family: monospace;
   background-color: #f1ede4;
