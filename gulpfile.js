@@ -35,7 +35,8 @@ var webpackConfig = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: config.title
+      title: config.title,
+      filename: 'index.html'
     })
   ]
 };
